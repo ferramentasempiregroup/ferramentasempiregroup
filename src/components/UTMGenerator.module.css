@@ -1,0 +1,349 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: #000;
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.header {
+  position: relative;
+  height: 256px;
+  overflow: hidden;
+  background: #000;
+}
+
+.headerPattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+}
+
+.headerGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(255, 215, 0, 0.1), rgba(249, 200, 14, 0.1), rgba(255, 215, 0, 0.1));
+}
+
+.headerFloating {
+  position: absolute;
+  inset: 0;
+}
+
+.floatingCircle1 {
+  position: absolute;
+  top: 48px;
+  left: 48px;
+  width: 128px;
+  height: 128px;
+  background: linear-gradient(to bottom right, rgba(255, 215, 0, 0.15), transparent);
+  border-radius: 50%;
+  filter: blur(32px);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.floatingCircle2 {
+  position: absolute;
+  bottom: 48px;
+  right: 48px;
+  width: 112px;
+  height: 112px;
+  background: linear-gradient(to bottom right, rgba(249, 200, 14, 0.12), transparent);
+  border-radius: 50%;
+  filter: blur(24px);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation-delay: 1s;
+}
+
+.floatingCircle3 {
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(to bottom right, rgba(255, 215, 0, 0.1), transparent);
+  border-radius: 50%;
+  filter: blur(16px);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation-delay: 0.5s;
+}
+
+.logoContainer {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.logo {
+  height: 208px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 25px 25px rgba(0, 0, 0, 0.15));
+}
+
+.content {
+  padding: 48px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formGroup {
+  position: relative;
+}
+
+.label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFD700;
+  margin-bottom: 12px;
+  transition: color 0.2s;
+}
+
+.formGroup:hover .label {
+  color: #F9C80E;
+}
+
+.select,
+.textarea,
+.input {
+  width: 100%;
+  padding: 16px 20px;
+  background: #18181B;
+  color: white;
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 18px;
+  transition: all 0.2s;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.select:focus,
+.textarea:focus,
+.input:focus {
+  outline: none;
+  border-color: #FFD700;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.5);
+}
+
+.textarea {
+  min-height: 140px;
+  resize: none;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+
+.pasteButton {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  font-size: 14px;
+  background: #18181B;
+  color: #FFD700;
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.pasteButton:hover {
+  background: #27272A;
+  transform: scale(1.05);
+}
+
+.pasteButton:active {
+  transform: scale(0.95);
+}
+
+.checkbox Container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(24, 24, 27, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  background: #18181B;
+  border: 1px solid #FFD700;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFD700;
+  cursor: pointer;
+}
+
+.urlSection {
+  margin-top: 48px;
+  padding: 32px;
+  background: rgba(24, 24, 27, 0.4);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.urlHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.urlTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #FFD700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.copyButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 32px;
+  font-size: 14px;
+  background: #FFD700;
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 20px 25px -5px rgba(255, 215, 0, 0.2);
+}
+
+.copyButton:hover {
+  background: #F9C80E;
+  transform: scale(1.05);
+}
+
+.copyButton:active {
+  transform: scale(0.95);
+}
+
+.urlDisplay {
+  position: relative;
+}
+
+.urlBox {
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+  overflow: auto;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+
+.urlText {
+  font-size: 14px;
+  color: rgba(255, 215, 0, 0.9);
+  font-family: 'Courier New', monospace;
+  word-break: break-all;
+  line-height: 1.6;
+}
+
+.copiedOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.95);
+  border-radius: 12px;
+  animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+.copiedMessage {
+  padding: 24px 32px;
+  background: rgba(24, 24, 27, 0.9);
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.copiedText {
+  color: #FFD700;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .content {
+    padding: 32px 16px;
+  }
+
+  .header {
+    height: 224px;
+  }
+
+  .logo {
+    height: 160px;
+  }
+
+  .urlHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
