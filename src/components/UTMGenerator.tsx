@@ -8,13 +8,13 @@ const UTMGenerator: React.FC = () => {
 
   const baseUrls = {
     'aposta': {
-      'ESPORTIVA': 'https://go.aff.esportiva.bet/zyr47z0k',
+      'ESPORTIVA': 'https://go.aff.esportiva.bet/4l8lno49',
       'BATEUBET': 'https://go.aff.bateu.bet.br/th2j85oe',
       'BETFALCONS': 'https://go.aff.betfalcons.bet.br/2sa6o3by',
       'PAGOLBET': 'https://go.aff.pagol.bet.br/h58lf9bv'
     },
     'cadastro': {
-      'ESPORTIVA': 'https://go.aff.esportiva.bet/g2442wjr',
+      'ESPORTIVA': 'https://go.aff.esportiva.bet/bt5558zi',
       'BATEUBET': 'https://go.aff.bateu.bet.br/cvr0gakv',
       'BETFALCONS': 'https://go.aff.betfalcons.bet.br/x66prfmr',
       'PAGOLBET': 'https://go.aff.pagol.bet.br/xulal7rf'
