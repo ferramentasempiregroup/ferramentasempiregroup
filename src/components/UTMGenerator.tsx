@@ -37,6 +37,11 @@ const UTMGenerator: React.FC = () => {
 
   const superbetBaseUrl = 'https://wlsuperbet.adsrv.eacdn.com/C.ashx?btag=a_12645b_431c_&affid=662&siteid=12645&adid=431&c=CampanhaGeral';
 
+  const betssonUrls = {
+    'cadastro': 'https://record.betsson.bet.br/_hWpNn2TsA-aCVR0T99tw9GNd7ZgqdRLk/1/',
+    'aposta': 'https://record.betsson.bet.br/_hWpNn2TsA-az0LuzTfCxSGNd7ZgqdRLk/1/'
+  };
+
   const [shareCodeInput, setShareCodeInput] = useState('');
   const [afp, setAfp] = useState('instagram');
   const [afp6, setAfp6] = useState('reels');
@@ -103,6 +108,32 @@ const UTMGenerator: React.FC = () => {
   }, [linkType, selectedSite, shareCodeInput, afp, afp6, showDetail, afp9, betmgmOrigin]);
 
   const generateUrl = () => {
+    if (selectedSite === 'BETSSON') {
+      if (linkType === 'cadastro') {
+        setGeneratedUrl(betssonUrls.cadastro);
+        return;
+      }
+
+      if (linkType === 'aposta') {
+        if (!shareCodeInput.trim()) {
+          setGeneratedUrl('');
+          return;
+        }
+
+        const input = shareCodeInput.trim();
+        const eventIdsMatch = input.match(/eventIds=.+/);
+
+        if (eventIdsMatch) {
+          const params = eventIdsMatch[0];
+          const fullUrl = `${betssonUrls.aposta}${params}`;
+          setGeneratedUrl(fullUrl);
+        } else {
+          setGeneratedUrl('');
+        }
+        return;
+      }
+    }
+
     if (selectedSite === 'BETMGM') {
       if (!shareCodeInput.trim()) {
         setGeneratedUrl('');
@@ -239,19 +270,20 @@ const UTMGenerator: React.FC = () => {
                   ))}
                   <option value="BETMGM">BETMGM</option>
                   <option value="SUPERBET">SUPERBET</option>
+                  <option value="BETSSON">BETSSON</option>
                 </select>
               </div>
 
-              {(linkType === 'aposta' || selectedSite === 'BETMGM' || (selectedSite === 'SUPERBET' && linkType === 'aposta')) && (
+              {(linkType === 'aposta' || selectedSite === 'BETMGM' || selectedSite === 'BETSSON' || (selectedSite === 'SUPERBET' && linkType === 'aposta')) && (
                 <div className={styles.formGroup}>
                   <label htmlFor="shareCode" className={styles.label}>
-                    {selectedSite === 'BETMGM' ? 'Link Completo da BETMGM' : selectedSite === 'SUPERBET' ? 'Link do Bilhete da SUPERBET' : selectedSite === 'BETFALCONS' ? 'Código da Aposta (bscode)' : 'Código da Aposta (shareCode)'}
+                    {selectedSite === 'BETMGM' ? 'Link Completo da BETMGM' : selectedSite === 'BETSSON' ? 'Link Completo da BETSSON' : selectedSite === 'SUPERBET' ? 'Link do Bilhete da SUPERBET' : selectedSite === 'BETFALCONS' ? 'Código da Aposta (bscode)' : 'Código da Aposta (shareCode)'}
                   </label>
                   <textarea
                     id="shareCode"
                     value={shareCodeInput}
                     onChange={(e) => setShareCodeInput(e.target.value)}
-                    placeholder={selectedSite === 'BETMGM' ? 'Cole o link completo da BETMGM aqui...' : selectedSite === 'SUPERBET' ? 'Cole o link do bilhete compartilhado da SUPERBET aqui...' : selectedSite === 'BETFALCONS' ? 'Cole o link ou bscode aqui...' : 'Cole o código ou mensagem completa aqui...'}
+                    placeholder={selectedSite === 'BETMGM' ? 'Cole o link completo da BETMGM aqui...' : selectedSite === 'BETSSON' ? 'Cole o link completo da BETSSON aqui (ex: https://www.betsson.bet.br/apostas-esportivas?eventIds=...)' : selectedSite === 'SUPERBET' ? 'Cole o link do bilhete compartilhado da SUPERBET aqui...' : selectedSite === 'BETFALCONS' ? 'Cole o link ou bscode aqui...' : 'Cole o código ou mensagem completa aqui...'}
                     className={styles.textarea}
                   />
                   <button onClick={handlePaste} className={styles.pasteButton}>
@@ -281,7 +313,7 @@ const UTMGenerator: React.FC = () => {
                 </div>
               )}
 
-              {selectedSite !== 'BETMGM' && selectedSite !== 'SUPERBET' && (
+              {selectedSite !== 'BETMGM' && selectedSite !== 'SUPERBET' && selectedSite !== 'BETSSON' && (
                 <div className={styles.formGroup}>
                   <label htmlFor="afp" className={styles.label}>
                     Canal de Origem
@@ -303,7 +335,7 @@ const UTMGenerator: React.FC = () => {
             </div>
 
             <div className={styles.column}>
-              {selectedSite !== 'BETMGM' && selectedSite !== 'SUPERBET' && (
+              {selectedSite !== 'BETMGM' && selectedSite !== 'SUPERBET' && selectedSite !== 'BETSSON' && (
                 <>
                   <div className={styles.formGroup}>
                     <label htmlFor="afp6" className={styles.label}>
