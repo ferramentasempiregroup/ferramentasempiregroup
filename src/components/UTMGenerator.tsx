@@ -117,6 +117,8 @@ const UTMGenerator: React.FC = () => {
       let baseUrl = verabetUrls[linkType as keyof typeof verabetUrls];
       const url = new URL(baseUrl);
 
+      url.searchParams.delete('lang');
+
       url.searchParams.set('utm_source', afp.toLowerCase());
       url.searchParams.set('utm_medium', afp6.toLowerCase());
 
@@ -128,6 +130,8 @@ const UTMGenerator: React.FC = () => {
         const extractedCode = extractShareCode(shareCodeInput);
         url.searchParams.set('bscode', extractedCode);
       }
+
+      url.searchParams.set('lang', 'pt-br');
 
       setGeneratedUrl(url.toString());
       return;
