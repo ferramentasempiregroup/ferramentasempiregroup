@@ -47,6 +47,11 @@ const UTMGenerator: React.FC = () => {
     'aposta': 'https://go.aff.ana.partners/3r9fl1jz?source_id=15462&lang=pt-br'
   };
 
+  const bet7kUrls = {
+    'cadastro': 'https://go.aff.ana.partners/myhg4ecr?source_id=15462&lang=pt-br',
+    'aposta': 'https://go.aff.ana.partners/djgxrsns?source_id=15462&lang=pt-br'
+  };
+
   const [shareCodeInput, setShareCodeInput] = useState('');
   const [afp, setAfp] = useState('instagram');
   const [afp6, setAfp6] = useState('reels');
@@ -113,6 +118,30 @@ const UTMGenerator: React.FC = () => {
   }, [linkType, selectedSite, shareCodeInput, afp, afp6, showDetail, afp9, betmgmOrigin]);
 
   const generateUrl = () => {
+    if (selectedSite === 'BET7K') {
+      let baseUrl = bet7kUrls[linkType as keyof typeof bet7kUrls];
+      const url = new URL(baseUrl);
+
+      url.searchParams.delete('lang');
+
+      url.searchParams.set('utm_source', afp.toLowerCase());
+      url.searchParams.set('utm_medium', afp6.toLowerCase());
+
+      if (showDetail && afp9) {
+        url.searchParams.set('utm_campaign', afp9.toLowerCase());
+      }
+
+      if (linkType === 'aposta' && shareCodeInput) {
+        const extractedCode = extractShareCode(shareCodeInput);
+        url.searchParams.set('bscode', extractedCode);
+      }
+
+      url.searchParams.set('lang', 'pt-br');
+
+      setGeneratedUrl(url.toString());
+      return;
+    }
+
     if (selectedSite === 'VERABET') {
       let baseUrl = verabetUrls[linkType as keyof typeof verabetUrls];
       const url = new URL(baseUrl);
@@ -301,19 +330,20 @@ const UTMGenerator: React.FC = () => {
                   <option value="SUPERBET">SUPERBET</option>
                   <option value="BETSSON">BETSSON</option>
                   <option value="VERABET">VERABET</option>
+                  <option value="BET7K">BET7K</option>
                 </select>
               </div>
 
-              {(linkType === 'aposta' || selectedSite === 'BETMGM' || selectedSite === 'BETSSON' || (selectedSite === 'SUPERBET' && linkType === 'aposta') || (selectedSite === 'VERABET' && linkType === 'aposta')) && (
+              {(linkType === 'aposta' || selectedSite === 'BETMGM' || selectedSite === 'BETSSON' || (selectedSite === 'SUPERBET' && linkType === 'aposta') || (selectedSite === 'VERABET' && linkType === 'aposta') || (selectedSite === 'BET7K' && linkType === 'aposta')) && (
                 <div className={styles.formGroup}>
                   <label htmlFor="shareCode" className={styles.label}>
-                    {selectedSite === 'BETMGM' ? 'Link Completo da BETMGM' : selectedSite === 'BETSSON' ? 'Link Completo da BETSSON' : selectedSite === 'SUPERBET' ? 'Link do Bilhete da SUPERBET' : selectedSite === 'VERABET' ? 'Código da Aposta (bscode)' : selectedSite === 'BETFALCONS' ? 'Código da Aposta (bscode)' : 'Código da Aposta (shareCode)'}
+                    {selectedSite === 'BETMGM' ? 'Link Completo da BETMGM' : selectedSite === 'BETSSON' ? 'Link Completo da BETSSON' : selectedSite === 'SUPERBET' ? 'Link do Bilhete da SUPERBET' : selectedSite === 'VERABET' ? 'Código da Aposta (bscode)' : selectedSite === 'BET7K' ? 'Código da Aposta (bscode)' : selectedSite === 'BETFALCONS' ? 'Código da Aposta (bscode)' : 'Código da Aposta (shareCode)'}
                   </label>
                   <textarea
                     id="shareCode"
                     value={shareCodeInput}
                     onChange={(e) => setShareCodeInput(e.target.value)}
-                    placeholder={selectedSite === 'BETMGM' ? 'Cole o link completo da BETMGM aqui...' : selectedSite === 'BETSSON' ? 'Cole o link completo da BETSSON aqui (ex: https://www.betsson.bet.br/apostas-esportivas?eventIds=...)' : selectedSite === 'SUPERBET' ? 'Cole o link do bilhete compartilhado da SUPERBET aqui...' : selectedSite === 'VERABET' ? 'Cole o link ou bscode aqui...' : selectedSite === 'BETFALCONS' ? 'Cole o link ou bscode aqui...' : 'Cole o código ou mensagem completa aqui...'}
+                    placeholder={selectedSite === 'BETMGM' ? 'Cole o link completo da BETMGM aqui...' : selectedSite === 'BETSSON' ? 'Cole o link completo da BETSSON aqui (ex: https://www.betsson.bet.br/apostas-esportivas?eventIds=...)' : selectedSite === 'SUPERBET' ? 'Cole o link do bilhete compartilhado da SUPERBET aqui...' : selectedSite === 'VERABET' ? 'Cole o link ou bscode aqui...' : selectedSite === 'BET7K' ? 'Cole o link ou bscode aqui...' : selectedSite === 'BETFALCONS' ? 'Cole o link ou bscode aqui...' : 'Cole o código ou mensagem completa aqui...'}
                     className={styles.textarea}
                   />
                   <button onClick={handlePaste} className={styles.pasteButton}>
@@ -346,7 +376,7 @@ const UTMGenerator: React.FC = () => {
               {selectedSite !== 'BETMGM' && selectedSite !== 'SUPERBET' && selectedSite !== 'BETSSON' && (
                 <div className={styles.formGroup}>
                   <label htmlFor="afp" className={styles.label}>
-                    Canal de Origem
+                    {selectedSite === 'VERABET' || selectedSite === 'BET7K' ? 'UTM Source' : 'Canal de Origem'}
                   </label>
                   <select
                     id="afp"
@@ -369,7 +399,7 @@ const UTMGenerator: React.FC = () => {
                 <>
                   <div className={styles.formGroup}>
                     <label htmlFor="afp6" className={styles.label}>
-                      Destino Específico
+                      {selectedSite === 'VERABET' || selectedSite === 'BET7K' ? 'UTM Medium' : 'Destino Específico'}
                     </label>
                     <select
                       id="afp6"
@@ -401,7 +431,7 @@ const UTMGenerator: React.FC = () => {
                   {showDetail && (
                     <div className={styles.formGroup}>
                       <label htmlFor="afp9" className={styles.label}>
-                        Detalhes Adicionais (AFP9)
+                        {selectedSite === 'VERABET' || selectedSite === 'BET7K' ? 'UTM Campaign' : 'Detalhes Adicionais (AFP9)'}
                       </label>
                       <input
                         type="text"
