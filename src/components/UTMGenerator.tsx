@@ -70,6 +70,9 @@ const UTMGenerator: React.FC = () => {
 
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [copied, setCopied] = useState(false);
+  const [shortUrl, setShortUrl] = useState('');
+  const [shortUrlLoading, setShortUrlLoading] = useState(false);
+  const [copiedShort, setCopiedShort] = useState(false);
 
   const afpOptions = ['instagram', 'telegram', 'twitter', 'whatsapp', 'trafego', 'comercial'] as const;
   type AfpChannel = typeof afpOptions[number];
@@ -121,6 +124,32 @@ const UTMGenerator: React.FC = () => {
   useEffect(() => {
     generateUrl();
   }, [linkType, selectedSite, shareCodeInput, afp, afp6, showDetail, afp9, betmgmOrigin]);
+
+  useEffect(() => {
+    if (!generatedUrl) {
+      setShortUrl('');
+      return;
+    }
+    let cancelled = false;
+    setShortUrlLoading(true);
+    setShortUrl('');
+    fetch('https://app.empiregroupbilhete.online/api/shorten', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: generatedUrl }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled) setShortUrl(data.shortUrl ?? '');
+      })
+      .catch(() => {
+        if (!cancelled) setShortUrl('');
+      })
+      .finally(() => {
+        if (!cancelled) setShortUrlLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [generatedUrl]);
 
   const generateUrl = () => {
     if (selectedSite === 'BET7K') {
@@ -268,6 +297,12 @@ const UTMGenerator: React.FC = () => {
     setTimeout(() => {
       setCopied(false);
     }, 2000);
+  };
+
+  const handleCopyShortUrl = () => {
+    navigator.clipboard.writeText(shortUrl);
+    setCopiedShort(true);
+    setTimeout(() => setCopiedShort(false), 2000);
   };
 
   return (
@@ -485,6 +520,29 @@ const UTMGenerator: React.FC = () => {
                 </div>
               )}
             </div>
+
+            {generatedUrl && (
+              <div className={styles.shortUrlSection}>
+                <div className={styles.shortUrlHeader}>
+                  <span className={styles.shortUrlLabel}>🔗 Link Encurtado</span>
+                  {shortUrl && (
+                    <button onClick={handleCopyShortUrl} className={styles.copyButtonSmall}>
+                      <Copy size={14} style={{ marginRight: '6px' }} />
+                      {copiedShort ? '✅ Copiado!' : 'Copiar'}
+                    </button>
+                  )}
+                </div>
+                <div className={styles.shortUrlBox}>
+                  {shortUrlLoading ? (
+                    <p className={styles.shortUrlLoading}>Encurtando link...</p>
+                  ) : shortUrl ? (
+                    <p className={styles.shortUrlText}>{shortUrl}</p>
+                  ) : (
+                    <p className={styles.shortUrlPlaceholder}>Não foi possível encurtar o link.</p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
