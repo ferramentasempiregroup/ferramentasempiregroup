@@ -70,7 +70,7 @@ const UTMGenerator: React.FC = () => {
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const afpOptions = ['instagram', 'telegram', 'twitter', 'whatsapp', 'trafego'] as const;
+  const afpOptions = ['instagram', 'telegram', 'twitter', 'whatsapp', 'trafego', 'comercial'] as const;
   type AfpChannel = typeof afpOptions[number];
 
   const afp6OptionsByChannel: Record<AfpChannel, string[]> = {
@@ -78,12 +78,16 @@ const UTMGenerator: React.FC = () => {
     telegram: ['free', 'vip', 'bingo', 'channelhelp', 'sendpulse', 'fixado', 'ODDsAltas', 'Alavancagem', 'Especiais', 'NBA', 'Regalo'],
     twitter: ['post'],
     whatsapp: ['comunidade', 'fixado', 'descricao'],
-    trafego: ['superodd', 'bingo']
+    trafego: ['superodd', 'bingo'],
+    comercial: ['Rapha', 'Binho', 'Duarte']
   };
 
   const getChannelDisplayName = (channel: string) => {
     if (channel === 'trafego') {
       return '🌐 Tráfego';
+    }
+    if (channel === 'comercial') {
+      return '💼 Comercial';
     }
     return `📱 ${channel}`;
   };
