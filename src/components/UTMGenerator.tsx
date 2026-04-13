@@ -28,6 +28,13 @@ const UTMGenerator: React.FC = () => {
     'PAGOLBET': '18831'
   };
 
+  const betmgmPids = [
+    { label: 'Grupo Free', pid: '4590' },
+    { label: 'Especiais', pid: '8125' },
+    { label: 'Alavancagem', pid: '9364' },
+    { label: 'ODDs Altas', pid: '9573' },
+  ];
+
   const betmgmOrigins = {
     'Especiais': '8125',
     'Free': '4590',
@@ -58,7 +65,14 @@ const UTMGenerator: React.FC = () => {
   const [afp6, setAfp6] = useState('reels');
   const [showDetail, setShowDetail] = useState(false);
   const [afp9, setAfp9] = useState('');
-  const [betmgmOrigin, setBetmgmOrigin] = useState('Free');
+  const [betmgmOrigin] = useState('Free');
+  const [copiedPid, setCopiedPid] = useState<string | null>(null);
+
+  const handleCopyPid = (pid: string) => {
+    navigator.clipboard.writeText(pid);
+    setCopiedPid(pid);
+    setTimeout(() => setCopiedPid(null), 2000);
+  };
 
   const formatDate = () => {
     const date = new Date();
@@ -336,214 +350,227 @@ const UTMGenerator: React.FC = () => {
         </div>
 
         <div className={styles.content}>
-          <div className={styles.grid}>
-            <div className={styles.column}>
-              <div className={styles.formGroup}>
-                <label htmlFor="linkType" className={styles.label}>
-                  Tipo de Link
-                </label>
-                <select
-                  id="linkType"
-                  value={linkType}
-                  onChange={(e) => setLinkType(e.target.value)}
-                  className={styles.select}
-                >
-                  <option value="aposta">🎯 Aposta Pronta</option>
-                  <option value="cadastro">📝 Cadastro</option>
-                </select>
+          <div className={styles.formGroup} style={{ marginBottom: '32px' }}>
+            <label htmlFor="selectedSite" className={styles.label}>
+              Plataforma
+            </label>
+            <select
+              id="selectedSite"
+              value={selectedSite}
+              onChange={(e) => setSelectedSite(e.target.value)}
+              className={styles.select}
+            >
+              {Object.keys(baseUrls.aposta).map((site) => (
+                <option key={site} value={site}>
+                  {site}
+                </option>
+              ))}
+              <option value="BETMGM">BETMGM</option>
+              <option value="SUPERBET">SUPERBET</option>
+              <option value="BETSSON">BETSSON</option>
+              {/* <option value="VERABET">VERABET</option> Temporariamente desativado */}
+              <option value="BET7K">BET7K</option>
+            </select>
+          </div>
+
+          {selectedSite === 'BETMGM' ? (
+            <div className={styles.betmgmPanel}>
+              <p className={styles.betmgmSubtitle}>PIDs por Canal</p>
+              <div className={styles.betmgmPidGrid}>
+                {betmgmPids.map(({ label, pid }) => (
+                  <div key={pid} className={styles.betmgmPidCard}>
+                    <div className={styles.betmgmPidInfo}>
+                      <span className={styles.betmgmPidLabel}>{label}</span>
+                      <span className={styles.betmgmPidValue}>{pid}</span>
+                    </div>
+                    <button
+                      onClick={() => handleCopyPid(pid)}
+                      className={`${styles.betmgmCopyBtn} ${copiedPid === pid ? styles.betmgmCopyBtnCopied : ''}`}
+                    >
+                      <Copy size={14} />
+                      {copiedPid === pid ? 'Copiado!' : 'Copiar'}
+                    </button>
+                  </div>
+                ))}
               </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="selectedSite" className={styles.label}>
-                  Plataforma
-                </label>
-                <select
-                  id="selectedSite"
-                  value={selectedSite}
-                  onChange={(e) => setSelectedSite(e.target.value)}
-                  className={styles.select}
-                >
-                  {Object.keys(baseUrls.aposta).map((site) => (
-                    <option key={site} value={site}>
-                      {site}
-                    </option>
-                  ))}
-                  <option value="BETMGM">BETMGM</option>
-                  <option value="SUPERBET">SUPERBET</option>
-                  <option value="BETSSON">BETSSON</option>
-                  {/* <option value="VERABET">VERABET</option> Temporariamente desativado */}
-                  <option value="BET7K">BET7K</option>
-                </select>
-              </div>
-
-              {(linkType === 'aposta' || selectedSite === 'BETMGM' || selectedSite === 'BETSSON' || (selectedSite === 'SUPERBET' && linkType === 'aposta') || (selectedSite === 'BET7K' && linkType === 'aposta')) && (
-                <div className={styles.formGroup}>
-                  <label htmlFor="shareCode" className={styles.label}>
-                    {selectedSite === 'BETMGM' ? 'Link Completo da BETMGM' : selectedSite === 'BETSSON' ? 'Link Completo da BETSSON' : selectedSite === 'SUPERBET' ? 'Link do Bilhete da SUPERBET' : selectedSite === 'BET7K' ? 'Código da Aposta (bscode)' : 'Código da Aposta (shareCode)'}
-                  </label>
-                  <textarea
-                    id="shareCode"
-                    value={shareCodeInput}
-                    onChange={(e) => setShareCodeInput(e.target.value)}
-                    placeholder={selectedSite === 'BETMGM' ? 'Cole o link completo da BETMGM aqui...' : selectedSite === 'BETSSON' ? 'Cole o link completo da BETSSON aqui (ex: https://www.betsson.bet.br/apostas-esportivas?eventIds=...)' : selectedSite === 'SUPERBET' ? 'Cole o link do bilhete compartilhado da SUPERBET aqui...' : selectedSite === 'BET7K' ? 'Cole o link ou bscode aqui...' : 'Cole o código ou mensagem completa aqui...'}
-                    className={styles.textarea}
-                  />
-                  <button onClick={handlePaste} className={styles.pasteButton}>
-                    <Clipboard size={16} style={{ marginRight: '8px' }} />
-                    Colar da Área de Transferência
-                  </button>
-                </div>
-              )}
-
-              {selectedSite === 'BETMGM' && (
-                <div className={styles.formGroup}>
-                  <label htmlFor="betmgmOrigin" className={styles.label}>
-                    Origem
-                  </label>
-                  <select
-                    id="betmgmOrigin"
-                    value={betmgmOrigin}
-                    onChange={(e) => setBetmgmOrigin(e.target.value)}
-                    className={styles.select}
-                  >
-                    {Object.keys(betmgmOrigins).map((origin) => (
-                      <option key={origin} value={origin}>
-                        {origin}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {selectedSite !== 'BETMGM' && selectedSite !== 'SUPERBET' && selectedSite !== 'BETSSON' && (
-                <div className={styles.formGroup}>
-                  <label htmlFor="afp" className={styles.label}>
-                    {selectedSite === 'BET7K' ? 'UTM Source' : 'Canal de Origem'}
-                  </label>
-                  <select
-                    id="afp"
-                    value={afp}
-                    onChange={(e) => setAfp(e.target.value)}
-                    className={styles.select}
-                  >
-                    {afpOptions.map((option) => (
-                      <option key={option} value={option}>
-                        {getChannelDisplayName(option)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              <a
+                href="https://script.google.com/a/macros/betmgm.com.br/s/AKfycby7QhbfHMI-GXfDyZNmQ19FB_cAdXLADagPmfeuQJYwk9ze58EXuiZL5qqRc5SHG_zv/exec"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.betmgmGeneratorBtn}
+              >
+                Abrir Gerador Oficial da BETMGM
+              </a>
             </div>
-
-            <div className={styles.column}>
-              {selectedSite !== 'BETMGM' && selectedSite !== 'SUPERBET' && selectedSite !== 'BETSSON' && (
-                <>
+          ) : (
+            <>
+              <div className={styles.grid}>
+                <div className={styles.column}>
                   <div className={styles.formGroup}>
-                    <label htmlFor="afp6" className={styles.label}>
-                      {selectedSite === 'BET7K' ? 'UTM Medium' : 'Destino Específico'}
+                    <label htmlFor="linkType" className={styles.label}>
+                      Tipo de Link
                     </label>
                     <select
-                      id="afp6"
-                      value={afp6}
-                      onChange={(e) => setAfp6(e.target.value)}
+                      id="linkType"
+                      value={linkType}
+                      onChange={(e) => setLinkType(e.target.value)}
                       className={styles.select}
                     >
-                      {afp6OptionsByChannel[afp as AfpChannel].map((option: string) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
+                      <option value="aposta">🎯 Aposta Pronta</option>
+                      <option value="cadastro">📝 Cadastro</option>
                     </select>
                   </div>
 
-                  <div className={styles.checkboxContainer}>
-                    <input
-                      type="checkbox"
-                      id="showDetail"
-                      checked={showDetail}
-                      onChange={(e) => setShowDetail(e.target.checked)}
-                      className={styles.checkbox}
-                    />
-                    <label htmlFor="showDetail" className={styles.checkboxLabel}>
-                      Adicionar detalhes personalizados
-                    </label>
-                  </div>
-
-                  {showDetail && (
+                  {(linkType === 'aposta' || selectedSite === 'BETSSON' || (selectedSite === 'SUPERBET' && linkType === 'aposta') || (selectedSite === 'BET7K' && linkType === 'aposta')) && (
                     <div className={styles.formGroup}>
-                      <label htmlFor="afp9" className={styles.label}>
-                        {selectedSite === 'BET7K' ? 'UTM Campaign' : 'Detalhes Adicionais (AFP9)'}
+                      <label htmlFor="shareCode" className={styles.label}>
+                        {selectedSite === 'BETSSON' ? 'Link Completo da BETSSON' : selectedSite === 'SUPERBET' ? 'Link do Bilhete da SUPERBET' : selectedSite === 'BET7K' ? 'Código da Aposta (bscode)' : 'Código da Aposta (shareCode)'}
                       </label>
-                      <input
-                        type="text"
-                        id="afp9"
-                        value={afp9}
-                        onChange={(e) => setAfp9(e.target.value)}
-                        placeholder="Informações extras para rastreamento..."
-                        className={styles.input}
+                      <textarea
+                        id="shareCode"
+                        value={shareCodeInput}
+                        onChange={(e) => setShareCodeInput(e.target.value)}
+                        placeholder={selectedSite === 'BETSSON' ? 'Cole o link completo da BETSSON aqui (ex: https://www.betsson.bet.br/apostas-esportivas?eventIds=...)' : selectedSite === 'SUPERBET' ? 'Cole o link do bilhete compartilhado da SUPERBET aqui...' : selectedSite === 'BET7K' ? 'Cole o link ou bscode aqui...' : 'Cole o código ou mensagem completa aqui...'}
+                        className={styles.textarea}
                       />
+                      <button onClick={handlePaste} className={styles.pasteButton}>
+                        <Clipboard size={16} style={{ marginRight: '8px' }} />
+                        Colar da Área de Transferência
+                      </button>
                     </div>
                   )}
-                </>
-              )}
-            </div>
-          </div>
 
-          <div className={styles.urlSection}>
-            <div className={styles.urlHeader}>
-              <h3 className={styles.urlTitle}>
-                <Target size={24} />
-                Link Gerado
-              </h3>
-              <button onClick={handleCopyUrl} className={styles.copyButton}>
-                <Copy size={18} style={{ marginRight: '8px' }} />
-                {copied ? '✅ Copiado!' : 'Copiar Link'}
-              </button>
-            </div>
+                  {selectedSite !== 'SUPERBET' && selectedSite !== 'BETSSON' && (
+                    <div className={styles.formGroup}>
+                      <label htmlFor="afp" className={styles.label}>
+                        {selectedSite === 'BET7K' ? 'UTM Source' : 'Canal de Origem'}
+                      </label>
+                      <select
+                        id="afp"
+                        value={afp}
+                        onChange={(e) => setAfp(e.target.value)}
+                        className={styles.select}
+                      >
+                        {afpOptions.map((option) => (
+                          <option key={option} value={option}>
+                            {getChannelDisplayName(option)}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
 
-            <div className={styles.urlDisplay}>
-              <div className={styles.urlBox}>
-                <p className={styles.urlText}>
-                  {generatedUrl || 'Configure os parâmetros acima para gerar seu link...'}
-                </p>
+                <div className={styles.column}>
+                  {selectedSite !== 'SUPERBET' && selectedSite !== 'BETSSON' && (
+                    <>
+                      <div className={styles.formGroup}>
+                        <label htmlFor="afp6" className={styles.label}>
+                          {selectedSite === 'BET7K' ? 'UTM Medium' : 'Destino Específico'}
+                        </label>
+                        <select
+                          id="afp6"
+                          value={afp6}
+                          onChange={(e) => setAfp6(e.target.value)}
+                          className={styles.select}
+                        >
+                          {afp6OptionsByChannel[afp as AfpChannel].map((option: string) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className={styles.checkboxContainer}>
+                        <input
+                          type="checkbox"
+                          id="showDetail"
+                          checked={showDetail}
+                          onChange={(e) => setShowDetail(e.target.checked)}
+                          className={styles.checkbox}
+                        />
+                        <label htmlFor="showDetail" className={styles.checkboxLabel}>
+                          Adicionar detalhes personalizados
+                        </label>
+                      </div>
+
+                      {showDetail && (
+                        <div className={styles.formGroup}>
+                          <label htmlFor="afp9" className={styles.label}>
+                            {selectedSite === 'BET7K' ? 'UTM Campaign' : 'Detalhes Adicionais (AFP9)'}
+                          </label>
+                          <input
+                            type="text"
+                            id="afp9"
+                            value={afp9}
+                            onChange={(e) => setAfp9(e.target.value)}
+                            placeholder="Informações extras para rastreamento..."
+                            className={styles.input}
+                          />
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
 
-              {copied && (
-                <div className={styles.copiedOverlay}>
-                  <div className={styles.copiedMessage}>
-                    <p className={styles.copiedText}>
-                      <Copy size={24} />
-                      Link copiado com sucesso!
+              <div className={styles.urlSection}>
+                <div className={styles.urlHeader}>
+                  <h3 className={styles.urlTitle}>
+                    <Target size={24} />
+                    Link Gerado
+                  </h3>
+                  <button onClick={handleCopyUrl} className={styles.copyButton}>
+                    <Copy size={18} style={{ marginRight: '8px' }} />
+                    {copied ? '✅ Copiado!' : 'Copiar Link'}
+                  </button>
+                </div>
+
+                <div className={styles.urlDisplay}>
+                  <div className={styles.urlBox}>
+                    <p className={styles.urlText}>
+                      {generatedUrl || 'Configure os parâmetros acima para gerar seu link...'}
                     </p>
                   </div>
-                </div>
-              )}
-            </div>
 
-            {generatedUrl && (
-              <div className={styles.shortUrlSection}>
-                <div className={styles.shortUrlHeader}>
-                  <span className={styles.shortUrlLabel}>🔗 Link Encurtado</span>
-                  {shortUrl && (
-                    <button onClick={handleCopyShortUrl} className={styles.copyButtonSmall}>
-                      <Copy size={14} style={{ marginRight: '6px' }} />
-                      {copiedShort ? '✅ Copiado!' : 'Copiar'}
-                    </button>
+                  {copied && (
+                    <div className={styles.copiedOverlay}>
+                      <div className={styles.copiedMessage}>
+                        <p className={styles.copiedText}>
+                          <Copy size={24} />
+                          Link copiado com sucesso!
+                        </p>
+                      </div>
+                    </div>
                   )}
                 </div>
-                <div className={styles.shortUrlBox}>
-                  {shortUrlLoading ? (
-                    <p className={styles.shortUrlLoading}>Encurtando link...</p>
-                  ) : shortUrl ? (
-                    <p className={styles.shortUrlText}>{shortUrl}</p>
-                  ) : (
-                    <p className={styles.shortUrlPlaceholder}>Não foi possível encurtar o link.</p>
-                  )}
-                </div>
+
+                {generatedUrl && (
+                  <div className={styles.shortUrlSection}>
+                    <div className={styles.shortUrlHeader}>
+                      <span className={styles.shortUrlLabel}>🔗 Link Encurtado</span>
+                      {shortUrl && (
+                        <button onClick={handleCopyShortUrl} className={styles.copyButtonSmall}>
+                          <Copy size={14} style={{ marginRight: '6px' }} />
+                          {copiedShort ? '✅ Copiado!' : 'Copiar'}
+                        </button>
+                      )}
+                    </div>
+                    <div className={styles.shortUrlBox}>
+                      {shortUrlLoading ? (
+                        <p className={styles.shortUrlLoading}>Encurtando link...</p>
+                      ) : shortUrl ? (
+                        <p className={styles.shortUrlText}>{shortUrl}</p>
+                      ) : (
+                        <p className={styles.shortUrlPlaceholder}>Não foi possível encurtar o link.</p>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>
