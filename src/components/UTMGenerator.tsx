@@ -33,6 +33,29 @@ const UTMGenerator: React.FC = () => {
     { label: 'Especiais', pid: '8125' },
     { label: 'Alavancagem', pid: '9364' },
     { label: 'ODDs Altas', pid: '9573' },
+    { label: 'Magreen APIOFC 001', pid: '7184' },
+    { label: 'Magreen APIOFC 002', pid: '7984' },
+    { label: 'Magreen - Regalo', pid: '12911' },
+    { label: 'Magreen - Storys', pid: '12912' },
+    { label: 'Magreen - Direct', pid: '12913' },
+    { label: 'Magreen - Reels', pid: '12914' },
+    { label: 'Magreen - NBA', pid: '12915' },
+    { label: 'Magreen - Channel Help', pid: '12916' },
+    { label: 'Magreen - Sendpulse', pid: '12917' },
+    { label: 'Magreen - Disparo Sendpulse', pid: '12918' },
+    { label: 'Magreen - Rapha', pid: '12919' },
+    { label: 'Magreen - Chat', pid: '12920' },
+    { label: 'Magreen - API 03', pid: '12921' },
+    { label: 'Magreen - API 04', pid: '12922' },
+    { label: 'Magreen - API 05', pid: '12923' },
+    { label: 'Magreen - Disparo API', pid: '12924' },
+    { label: 'Magreen - Suporte', pid: '12925' },
+    { label: 'Magreen - Binho', pid: '12926' },
+    { label: 'Magreen - Duarte', pid: '12927' },
+    { label: 'Magreen - Giovanni', pid: '12928' },
+    { label: 'Magreen - Ingrid', pid: '12929' },
+    { label: 'Magreen - Vip', pid: '12930' },
+    { label: 'Magreen - Comunidade WhatsApp', pid: '12931' },
   ];
 
   const betmgmOrigins = {
@@ -67,6 +90,7 @@ const UTMGenerator: React.FC = () => {
   const [afp9, setAfp9] = useState('');
   const [betmgmOrigin] = useState('Free');
   const [copiedPid, setCopiedPid] = useState<string | null>(null);
+  const [selectedBetmgmPid, setSelectedBetmgmPid] = useState(betmgmPids[0].pid);
 
   const handleCopyPid = (pid: string) => {
     navigator.clipboard.writeText(pid);
@@ -340,23 +364,33 @@ const UTMGenerator: React.FC = () => {
 
           {selectedSite === 'BETMGM' ? (
             <div className={styles.betmgmPanel}>
-              <p className={styles.betmgmSubtitle}>PIDs por Canal</p>
-              <div className={styles.betmgmPidGrid}>
-                {betmgmPids.map(({ label, pid }) => (
-                  <div key={pid} className={styles.betmgmPidCard}>
-                    <div className={styles.betmgmPidInfo}>
-                      <span className={styles.betmgmPidLabel}>{label}</span>
-                      <span className={styles.betmgmPidValue}>{pid}</span>
-                    </div>
-                    <button
-                      onClick={() => handleCopyPid(pid)}
-                      className={`${styles.betmgmCopyBtn} ${copiedPid === pid ? styles.betmgmCopyBtnCopied : ''}`}
-                    >
-                      <Copy size={14} />
-                      {copiedPid === pid ? 'Copiado!' : 'Copiar'}
-                    </button>
-                  </div>
-                ))}
+              <p className={styles.betmgmSubtitle}>Selecionar PID</p>
+              <div className={styles.betmgmSelectorRow}>
+                <select
+                  className={styles.betmgmPidSelect}
+                  value={selectedBetmgmPid}
+                  onChange={(e) => {
+                    setSelectedBetmgmPid(e.target.value);
+                    setCopiedPid(null);
+                  }}
+                >
+                  {betmgmPids.map(({ label, pid }) => (
+                    <option key={pid} value={pid}>
+                      {label} — {pid}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => handleCopyPid(selectedBetmgmPid)}
+                  className={`${styles.betmgmCopyBtn} ${copiedPid === selectedBetmgmPid ? styles.betmgmCopyBtnCopied : ''}`}
+                >
+                  <Copy size={15} />
+                  {copiedPid === selectedBetmgmPid ? 'Copiado!' : 'Copiar PID'}
+                </button>
+              </div>
+              <div className={styles.betmgmPidPreview}>
+                <span className={styles.betmgmPidPreviewLabel}>PID selecionado</span>
+                <span className={styles.betmgmPidPreviewValue}>{selectedBetmgmPid}</span>
               </div>
               <a
                 href="https://script.google.com/a/macros/betmgm.com.br/s/AKfycby7QhbfHMI-GXfDyZNmQ19FB_cAdXLADagPmfeuQJYwk9ze58EXuiZL5qqRc5SHG_zv/exec"

@@ -411,51 +411,56 @@
   margin: 0;
 }
 
-.betmgmPidGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.betmgmPidCard {
+.betmgmSelectorRow {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  padding: 18px 20px;
+  align-items: stretch;
+}
+
+.betmgmPidSelect {
+  flex: 1;
+  padding: 16px 20px;
   background: #18181B;
-  border: 1px solid rgba(255, 215, 0, 0.4);
-  border-radius: 14px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.betmgmPidCard:hover {
-  border-color: rgba(255, 215, 0, 0.7);
-  box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.15);
-}
-
-.betmgmPidInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  color: white;
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.2s;
+  cursor: pointer;
   min-width: 0;
 }
 
-.betmgmPidLabel {
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.55);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.betmgmPidSelect:focus {
+  outline: none;
+  border-color: #FFD700;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.5);
 }
 
-.betmgmPidValue {
-  font-size: 22px;
+.betmgmPidPreview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  border-radius: 12px;
+}
+
+.betmgmPidPreviewLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.betmgmPidPreviewValue {
+  font-size: 26px;
   font-weight: 800;
   color: #FFD700;
   font-family: 'Courier New', monospace;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 
 .betmgmCopyBtn {
@@ -543,15 +548,15 @@
 }
 
 @media (max-width: 600px) {
-  .betmgmPidGrid {
-    grid-template-columns: 1fr;
+  .betmgmSelectorRow {
+    flex-direction: column;
   }
 
-  .betmgmPidCard {
-    padding: 14px 16px;
+  .betmgmPidPreviewValue {
+    font-size: 22px;
   }
 
-  .betmgmPidValue {
-    font-size: 20px;
+  .betmgmPidSelect {
+    font-size: 15px;
   }
 }
